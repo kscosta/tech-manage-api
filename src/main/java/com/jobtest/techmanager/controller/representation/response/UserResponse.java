@@ -5,7 +5,7 @@ import com.jobtest.techmanager.business.enums.UserType;
 import java.time.LocalDate;
 
 /**
- * Record para representar o recurso User
+ * Record para representar o recurso User (DTO)
  *
  * @param id
  * @param fullName

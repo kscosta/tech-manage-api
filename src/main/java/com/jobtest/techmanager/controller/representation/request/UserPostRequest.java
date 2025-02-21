@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import java.time.LocalDate;
 
 /**
- * Record para representar o recurso User para requisição REST - POST
+ * Record para representar o recurso User para requisição REST - POST (DTO)
  *
  * @param fullName
  * @param email
