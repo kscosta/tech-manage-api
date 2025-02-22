@@ -5,6 +5,7 @@ import com.jobtest.techmanager.business.enums.UserType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
@@ -25,7 +26,8 @@ import java.time.LocalDate;
 public record UserPostRequest(
         @NotBlank(message = "fullName deve ser informado!") String fullName,
         @NotBlank(message = "email deve ser informado!") @Email(message = "Email informado é inválido!") String email,
-        String phone,
+        @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{4,5}[- .]?\\d{4}$",
+                message = "Formato de telefone inválido! Exemplo: +99 99 99999-9999") String phone,
         @JsonFormat(pattern = "dd-MM-yyyy") LocalDate birthDate,
         @NotNull(message = "userType deve ser informado!") UserType userType
 ) {

@@ -6,3 +6,13 @@ server:
 spring:
   application:
     name: Tech-Manager
+  output:
+    ansi:
+      enabled: ALWAYS
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    doc-expansion: none
+    writer-with-order-by-keys: true
+    operationsSorter: method
