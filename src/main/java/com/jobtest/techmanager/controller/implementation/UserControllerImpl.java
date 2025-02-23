@@ -1,6 +1,6 @@
 package com.jobtest.techmanager.controller.implementation;
 
-import com.jobtest.techmanager.business.enums.UserType;
+import com.jobtest.techmanager.business.service.UserService;
 import com.jobtest.techmanager.controller.UserController;
 import com.jobtest.techmanager.controller.representation.request.UserPostRequest;
 import com.jobtest.techmanager.controller.representation.response.DefaultApiResponse;
@@ -21,6 +21,12 @@ import java.time.LocalDateTime;
 @RestController
 public class UserControllerImpl implements UserController {
 
+    private final UserService userService;
+
+    public UserControllerImpl(UserService userService) {
+        this.userService = userService;
+    }
+
     @Override
     public ResponseEntity<DefaultApiResponse<UserResponse>> createUser(UserPostRequest userPostRequest) {
 
@@ -28,10 +34,8 @@ public class UserControllerImpl implements UserController {
                         LocalDateTime.now(),
                         HttpStatus.CREATED.value(),
                         "Usuário criado com sucesso!",
-                        new UserResponse(1L, "teste", "teste@teste", "123",
-                                null, UserType.ADMIN)
+                        userService.createUser(userPostRequest)
                 )
-
         );
     }
 }

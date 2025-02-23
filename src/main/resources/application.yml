@@ -9,6 +9,8 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
+  profiles:
+    active: production
 
 springdoc:
   swagger-ui:
@@ -16,3 +18,26 @@ springdoc:
     doc-expansion: none
     writer-with-order-by-keys: true
     operationsSorter: method
+
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    driverClassName: org.h2.Driver
+    url: "jdbc:h2:mem:techmanagerdb;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL"
+    username: "sa"
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+    show-sql: false
