@@ -1,5 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TechManagerApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <envs>
+      <env name="TM_DATABASE_URL" value="jdbc:postgresql://localhost:5432/techmanagerdb" />
+      <env name="TM_DATABASE_USERNAME" value="postgres" />
+      <env name="TM_DATABASE_PASSWORD" value="Spy@zt123" />
+    </envs>
     <option name="MAIN_CLASS_NAME" value="com.jobtest.techmanager.TechManagerApplication" />
     <module name="techmanager.main" />
     <extension name="coverage">
