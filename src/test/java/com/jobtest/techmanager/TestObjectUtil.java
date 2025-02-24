@@ -13,7 +13,8 @@ public class TestObjectUtil {
 
     public static UserEntity userEntity() {
 
-        return new UserEntity(1L, "Fulano teste", "test@test.com", Date.valueOf("1995-10-25"), "+55 11 99999-5544", UserType.ADMIN);
+        return new UserEntity(1L, "Fulano teste", "test@test.com", Date.valueOf("1995-10-25"),
+                "+55 11 99999-5544", UserType.ADMIN);
     }
 
     public static UserResponse userResponse() {

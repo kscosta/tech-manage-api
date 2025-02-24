@@ -1,5 +1,6 @@
 package com.jobtest.techmanager.controller.representation.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jobtest.techmanager.business.enums.UserType;
 
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public record UserResponse(
         String fullName,
         String email,
         String phone,
-        LocalDate birthDate,
+        @JsonFormat(pattern = "dd-MM-yyyy") LocalDate birthDate,
         UserType userType
 ) {
 }
