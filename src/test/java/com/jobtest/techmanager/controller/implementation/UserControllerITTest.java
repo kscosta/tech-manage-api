@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jobtest.techmanager.TestObjectUtil;
 import com.jobtest.techmanager.business.enums.UserType;
 import com.jobtest.techmanager.controller.representation.request.UserPostRequest;
+import com.jobtest.techmanager.controller.representation.request.UserPutRequest;
 import com.jobtest.techmanager.controller.representation.response.DefaultApiResponse;
 import com.jobtest.techmanager.controller.representation.response.UserResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -82,5 +83,79 @@ public class UserControllerITTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(400, Objects.requireNonNull(response.getBody()).status());
         assertEquals("Email informado é inválido!", response.getBody().message());
+    }
+
+    @Test
+    @DisplayName("Método updateUser deve retornar status OK quando executado com sucesso")
+    void updateUserShouldReturnOKStatusWhenSuccessful() throws JsonProcessingException {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<UserPutRequest> request = new HttpEntity<>(TestObjectUtil.userPutRequest(), headers);
+
+        ResponseEntity<DefaultApiResponse<UserResponse>> response = testRestTemplate.exchange(
+                "/users",
+                HttpMethod.PUT,
+                request,
+                new ParameterizedTypeReference<DefaultApiResponse<UserResponse>>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertNotNull(response.getBody().data());
+        assertEquals(1L, response.getBody().data().id());
+        assertEquals("Fulano da Silva", response.getBody().data().fullName());
+        assertEquals("fulano@test.com.br", response.getBody().data().email());
+        assertEquals("+55 11 99988-5544", response.getBody().data().phone());
+        assertEquals("1995-10-25", response.getBody().data().birthDate().toString());
+        assertEquals("ADMIN", response.getBody().data().userType().getValue());
+    }
+
+    @Test
+    @DisplayName("Método updateUser deve retornar status BadRequest quando parâmetro informado for inválido")
+    void updateUserShouldReturnBadRequestStatusWhenInvalidParameters() {
+
+        UserPutRequest invalidRequest = new UserPutRequest(1L, "Fulano da Silva", "invalid",
+                "+55 11 99999-5544",
+                LocalDate.of(1995, 10, 25), UserType.ADMIN);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<UserPutRequest> request = new HttpEntity<>(invalidRequest, headers);
+
+        ResponseEntity<DefaultApiResponse<UserResponse>> response = testRestTemplate.exchange(
+                "/users",
+                HttpMethod.PUT,
+                request,
+                new ParameterizedTypeReference<DefaultApiResponse<UserResponse>>() {
+                });
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(400, Objects.requireNonNull(response.getBody()).status());
+        assertEquals("Email informado é inválido!", response.getBody().message());
+    }
+
+    @Test
+    @DisplayName("Método updateUser deve retornar status Not Found quando usuario inexistente")
+    void updateUserShouldReturnNotFoundStatusWhenUserNotExist() {
+
+        UserPutRequest requestNotFound = new UserPutRequest(9999L, "Fulano da Silva", "fulano@test.com.br",
+                "+55 11 99988-5544",
+                LocalDate.of(1995, 10, 25), UserType.ADMIN);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<UserPutRequest> request = new HttpEntity<>(requestNotFound, headers);
+
+        ResponseEntity<DefaultApiResponse<UserResponse>> response = testRestTemplate.exchange(
+                "/users",
+                HttpMethod.PUT,
+                request,
+                new ParameterizedTypeReference<DefaultApiResponse<UserResponse>>() {
+                });
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(404, Objects.requireNonNull(response.getBody()).status());
+        assertEquals("Usuário não encontrado!", response.getBody().message());
     }
 }

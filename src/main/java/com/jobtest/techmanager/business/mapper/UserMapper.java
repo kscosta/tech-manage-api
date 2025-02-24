@@ -1,6 +1,7 @@
 package com.jobtest.techmanager.business.mapper;
 
 import com.jobtest.techmanager.controller.representation.request.UserPostRequest;
+import com.jobtest.techmanager.controller.representation.request.UserPutRequest;
 import com.jobtest.techmanager.controller.representation.response.UserResponse;
 import com.jobtest.techmanager.infrastructure.entity.UserEntity;
 import org.mapstruct.Mapper;
@@ -29,6 +30,9 @@ public interface UserMapper {
     @Mapping(target = "birthDate", source = "birthDate", dateFormat = "yyyy-MM-dd")
     @Mapping(target = "id", ignore = true)
     UserEntity userPostRequestToUserEntity(UserPostRequest userPostRequest);
+
+    @Mapping(target = "birthDate", source = "birthDate", dateFormat = "yyyy-MM-dd")
+    UserEntity userPutRequestToUserEntity(UserPutRequest userPutRequest);
 
     @Mapping(target = "birthDate", source = "birthDate", dateFormat = "yyyy-MM-dd")
     UserResponse userEntityToUserResponse(UserEntity userEntity);

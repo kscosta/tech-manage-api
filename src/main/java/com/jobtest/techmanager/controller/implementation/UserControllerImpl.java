@@ -3,6 +3,7 @@ package com.jobtest.techmanager.controller.implementation;
 import com.jobtest.techmanager.business.service.UserService;
 import com.jobtest.techmanager.controller.UserController;
 import com.jobtest.techmanager.controller.representation.request.UserPostRequest;
+import com.jobtest.techmanager.controller.representation.request.UserPutRequest;
 import com.jobtest.techmanager.controller.representation.response.DefaultApiResponse;
 import com.jobtest.techmanager.controller.representation.response.UserResponse;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,18 @@ public class UserControllerImpl implements UserController {
                         HttpStatus.CREATED.value(),
                         "Usuário criado com sucesso!",
                         userService.createUser(userPostRequest)
+                )
+        );
+    }
+
+    @Override
+    public ResponseEntity<DefaultApiResponse<UserResponse>> updateUser(UserPutRequest userPutRequest) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(new DefaultApiResponse<UserResponse>(
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "Usuário atualizado com sucesso!",
+                        userService.updateUser(userPutRequest)
                 )
         );
     }
