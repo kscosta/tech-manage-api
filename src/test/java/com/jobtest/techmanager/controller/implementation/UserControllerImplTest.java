@@ -22,8 +22,7 @@ import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,14 +44,13 @@ class UserControllerImplTest {
 
         mockMvc = MockMvcBuilders.standaloneSetup(userControllerImplMock).build();
         objectMapper.registerModule(new JavaTimeModule());
-
-        lenient().when(userServiceMock.createUser(any())).thenReturn(TestObjectUtil.userResponse());
     }
 
     @DisplayName("Metodo createUser deve retornar um UserResponse quando for executado com sucesso")
     @Test
     void createUserShouldReturnUserResponseWhenSuccess() throws Exception {
 
+        when(userServiceMock.createUser(any())).thenReturn(TestObjectUtil.userResponse());
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(TestObjectUtil.userPostRequest())))
@@ -122,6 +120,17 @@ class UserControllerImplTest {
                 .andExpect(status().isBadRequest());
 
         verify(userServiceMock, times(0)).updateUser(TestObjectUtil.userPutRequest());
+    }
+
+    @DisplayName("Metodo deleteUser deve retornar Status OK quando for executado com sucesso")
+    @Test
+    void deleteUserShouldReturnStatusOKWhenSuccess() throws Exception {
+
+        doNothing().when(userServiceMock).deleteUser(any());
+
+        mockMvc.perform(delete("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
 }

@@ -158,4 +158,38 @@ public class UserControllerITTest {
         assertEquals(404, Objects.requireNonNull(response.getBody()).status());
         assertEquals("Usuário não encontrado!", response.getBody().message());
     }
+
+    @Test
+    @DisplayName("Método deleteUser deve retornar status OK quando executado com sucesso")
+    void deleteUserShouldReturnStatusOKWhenSuccessful() {
+
+        ResponseEntity<DefaultApiResponse<String>> response = testRestTemplate.exchange(
+                "/users/{id}",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<DefaultApiResponse<String>>() {
+                },
+                2L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(200, Objects.requireNonNull(response.getBody()).status());
+        assertEquals("Usuário excluído com sucesso!", response.getBody().message());
+    }
+
+    @Test
+    @DisplayName("Método deleteUser deve retornar status Not Found quando usuario inexistente")
+    void deleteUserShouldReturnNotFoundStatusWhenUserNotExist() {
+
+        ResponseEntity<DefaultApiResponse<String>> response = testRestTemplate.exchange(
+                "/users/{id}",
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<DefaultApiResponse<String>>() {
+                },
+                99999L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(404, Objects.requireNonNull(response.getBody()).status());
+        assertEquals("Usuário não encontrado!", response.getBody().message());
+    }
 }
