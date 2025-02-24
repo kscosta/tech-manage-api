@@ -58,4 +58,17 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(NotFoundApiException.class)
+    public ResponseEntity<DefaultApiResponse<String>> notFoundApiExceptionHandler(
+            NotFoundApiException notFoundApiException) {
+
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                new DefaultApiResponse<>(LocalDateTime.now(),
+                        HttpStatus.NOT_FOUND.value(),
+                        notFoundApiException.getMessage(),
+                        null)
+        );
+    }
+
 }
