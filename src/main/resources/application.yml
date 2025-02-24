@@ -24,6 +24,10 @@ spring:
   config:
     activate:
       on-profile: production
+  datasource:
+    url: ${TM_DATABASE_URL}
+    username: ${TM_DATABASE_USERNAME}
+    password: ${TM_DATABASE_PASSWORD}
 
 ---
 spring:

@@ -2,10 +2,10 @@ package com.jobtest.techmanager.controller.implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.jobtest.techmanager.TestObjectUtil;
 import com.jobtest.techmanager.business.enums.UserType;
 import com.jobtest.techmanager.business.service.UserService;
 import com.jobtest.techmanager.controller.representation.request.UserPostRequest;
-import com.jobtest.techmanager.controller.representation.response.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@DisplayName("Teste de unidade da classe UserControllerImpl")
+@DisplayName("Teste do Recurso de Usuários")
 @ExtendWith(MockitoExtension.class)
 class UserControllerImplTest {
 
@@ -38,23 +38,13 @@ class UserControllerImplTest {
     private MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private UserResponse userResponseMock;
-    private UserPostRequest userPostRequestMock;
-
     @BeforeEach
     void setUp() {
 
         mockMvc = MockMvcBuilders.standaloneSetup(userControllerImplMock).build();
         objectMapper.registerModule(new JavaTimeModule());
 
-        userResponseMock = new UserResponse(1L, "Fulano da Silva", "fulano@test.com",
-                "+55 11 99999-5544", LocalDate.of(1995, 10, 25), UserType.ADMIN);
-
-        userPostRequestMock = new UserPostRequest("Fulano da Silva", "fulano@test.com",
-                "+55 11 99999-5544",
-                LocalDate.of(1995, 10, 25), UserType.ADMIN);
-
-        lenient().when(userServiceMock.createUser(any())).thenReturn(userResponseMock);
+        lenient().when(userServiceMock.createUser(any())).thenReturn(TestObjectUtil.userResponse());
     }
 
     @DisplayName("Metodo createUser deve retornar um UserResponse quando for executado com sucesso")
@@ -63,19 +53,19 @@ class UserControllerImplTest {
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(userPostRequestMock)))
+                        .content(objectMapper.writeValueAsBytes(TestObjectUtil.userPostRequest())))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status").value(201))
                 .andExpect(jsonPath("$.message").value("Usuário criado com sucesso!"))
-                .andExpect(jsonPath("$.data.id").value(userResponseMock.id()))
-                .andExpect(jsonPath("$.data.fullName").value(userResponseMock.fullName()))
-                .andExpect(jsonPath("$.data.email").value(userResponseMock.email()))
-                .andExpect(jsonPath("$.data.phone").value(userResponseMock.phone()))
+                .andExpect(jsonPath("$.data.id").value(TestObjectUtil.userResponse().id()))
+                .andExpect(jsonPath("$.data.fullName").value(TestObjectUtil.userResponse().fullName()))
+                .andExpect(jsonPath("$.data.email").value(TestObjectUtil.userResponse().email()))
+                .andExpect(jsonPath("$.data.phone").value(TestObjectUtil.userResponse().phone()))
                 .andExpect(jsonPath("$.data.birthDate").exists())
-                .andExpect(jsonPath("$.data.userType").value(userResponseMock.userType().getValue()))
+                .andExpect(jsonPath("$.data.userType").value(TestObjectUtil.userResponse().userType().getValue()))
         ;
 
-        verify(userServiceMock, times(1)).createUser(userPostRequestMock);
+        verify(userServiceMock, times(1)).createUser(TestObjectUtil.userPostRequest());
     }
 
     @DisplayName("Metodo createUser deve retornar BadRequest quando parametros inválidos")
@@ -91,7 +81,7 @@ class UserControllerImplTest {
                         .content(objectMapper.writeValueAsBytes(invalidUserPostRequestMock)))
                 .andExpect(status().isBadRequest());
 
-        verify(userServiceMock, times(0)).createUser(userPostRequestMock);
+        verify(userServiceMock, times(0)).createUser(TestObjectUtil.userPostRequest());
     }
 
 }
