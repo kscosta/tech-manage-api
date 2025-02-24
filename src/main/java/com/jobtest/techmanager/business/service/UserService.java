@@ -4,6 +4,8 @@ import com.jobtest.techmanager.controller.representation.request.UserPostRequest
 import com.jobtest.techmanager.controller.representation.request.UserPutRequest;
 import com.jobtest.techmanager.controller.representation.response.UserResponse;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.rmi.NotBoundException;
 
@@ -23,5 +25,7 @@ public interface UserService {
     UserResponse findUserById(Long id);
 
     void deleteUser(Long id);
+
+    Page<UserResponse> findAllUsers(Pageable pageable);
 
 }
