@@ -51,4 +51,11 @@ public class UserServiceImpl implements UserService {
                 new NotFoundApiException("Usuário não encontrado!"));
         return userMapper.userEntityToUserResponse(user);
     }
+
+    @Override
+    public void deleteUser(Long id) {
+
+        findUserById(id);
+        userRepository.deleteById(id);
+    }
 }

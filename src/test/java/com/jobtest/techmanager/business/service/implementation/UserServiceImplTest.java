@@ -21,7 +21,6 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
 
-
     @InjectMocks
     private UserServiceImpl userServiceMock;
 
@@ -74,4 +73,19 @@ class UserServiceImplTest {
         verify(userRepositoryMock, times(1)).saveAndFlush(TestObjectUtil.userEntityUpdated());
 
     }
+
+    @Test
+    @DisplayName("Método deleteUser não deve retornar exception quando executado com sucesso")
+    void deleteUserShouldNotThrowExceptionWhenSuccess() {
+
+        doNothing().when(userRepositoryMock).deleteById(any());
+        when(userRepositoryMock.findById(any())).thenReturn(Optional.of(TestObjectUtil.userEntity()));
+
+        Assertions.assertDoesNotThrow(() -> userServiceMock.deleteUser(1L));
+
+        verify(userRepositoryMock, times(1)).findById(1L);
+
+    }
+
+
 }
