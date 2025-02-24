@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     public UserResponse findUserById(Long id) {
 
         UserEntity user = userRepository.findById(id).orElseThrow(() ->
-                new NotFoundApiException("Usuário não encontrado"));
+                new NotFoundApiException("Usuário não encontrado!"));
         return userMapper.userEntityToUserResponse(user);
     }
 }

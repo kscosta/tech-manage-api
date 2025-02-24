@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -48,6 +50,28 @@ class UserServiceImplTest {
         verify(userRepositoryMock, times(1)).save(TestObjectUtil.userEntity());
 
         verify(userMapperMock, times(1)).userEntityToUserResponse(TestObjectUtil.userEntity());
+
+    }
+
+    @Test
+    @DisplayName("Método updateUser deve retornar  usuário atualizado quando executado com sucesso")
+    void updateUserShouldReturnUserResponseWhenSuccess() {
+
+        when(userRepositoryMock.saveAndFlush(any())).thenReturn(TestObjectUtil.userEntityUpdated());
+        when(userRepositoryMock.findById(any())).thenReturn(Optional.of(TestObjectUtil.userEntity()));
+        when(userMapperMock.userPutRequestToUserEntity(any())).thenReturn(TestObjectUtil.userEntityUpdated());
+        when(userMapperMock.userEntityToUserResponse(any())).thenReturn(TestObjectUtil.userResponseUpdated());
+
+        UserResponse response = userServiceMock.updateUser(TestObjectUtil.userPutRequest());
+
+        Assertions.assertEquals(response, TestObjectUtil.userResponseUpdated());
+
+        verify(userMapperMock, times(1))
+                .userPutRequestToUserEntity(TestObjectUtil.userPutRequest());
+
+        verify(userRepositoryMock, times(1)).findById(1L);
+
+        verify(userRepositoryMock, times(1)).saveAndFlush(TestObjectUtil.userEntityUpdated());
 
     }
 }

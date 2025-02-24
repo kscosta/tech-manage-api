@@ -6,6 +6,7 @@ import com.jobtest.techmanager.TestObjectUtil;
 import com.jobtest.techmanager.business.enums.UserType;
 import com.jobtest.techmanager.business.service.UserService;
 import com.jobtest.techmanager.controller.representation.request.UserPostRequest;
+import com.jobtest.techmanager.controller.representation.request.UserPutRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -82,6 +84,44 @@ class UserControllerImplTest {
                 .andExpect(status().isBadRequest());
 
         verify(userServiceMock, times(0)).createUser(TestObjectUtil.userPostRequest());
+    }
+
+    @DisplayName("Metodo updateUser deve retornar um UserResponse quando for executado com sucesso")
+    @Test
+    void updateUserShouldReturnUserResponseWhenSuccess() throws Exception {
+
+        when(userServiceMock.updateUser(any())).thenReturn(TestObjectUtil.userResponseUpdated());
+        mockMvc.perform(put("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(TestObjectUtil.userPutRequest())))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.message").value("Usuário atualizado com sucesso!"))
+                .andExpect(jsonPath("$.data.id").value(TestObjectUtil.userResponseUpdated().id()))
+                .andExpect(jsonPath("$.data.fullName").value(TestObjectUtil.userResponseUpdated().fullName()))
+                .andExpect(jsonPath("$.data.email").value(TestObjectUtil.userResponseUpdated().email()))
+                .andExpect(jsonPath("$.data.phone").value(TestObjectUtil.userResponseUpdated().phone()))
+                .andExpect(jsonPath("$.data.birthDate").exists())
+                .andExpect(jsonPath("$.data.userType").value(TestObjectUtil.userResponseUpdated().userType().getValue()))
+        ;
+
+        verify(userServiceMock, times(1)).updateUser(TestObjectUtil.userPutRequest());
+    }
+
+    @DisplayName("Metodo updateUser deve retornar BadRequest quando parametros inválidos")
+    @Test
+    void updateUserShouldReturnBadRequestWhenInvalidParameters() throws Exception {
+
+        UserPutRequest invalidUserPutRequestMock = new UserPutRequest(1L, "Fulano da Silva", "invalid",
+                "+55 11 99999-5544",
+                LocalDate.of(1995, 10, 25), UserType.ADMIN);
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(invalidUserPutRequestMock)))
+                .andExpect(status().isBadRequest());
+
+        verify(userServiceMock, times(0)).updateUser(TestObjectUtil.userPutRequest());
     }
 
 }
