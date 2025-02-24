@@ -51,4 +51,18 @@ public class UserControllerImpl implements UserController {
                 )
         );
     }
+
+    @Override
+    public ResponseEntity<DefaultApiResponse<String>> deleteUser(Long id) {
+
+        userService.deleteUser(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new DefaultApiResponse<String>(
+                        LocalDateTime.now(),
+                        HttpStatus.OK.value(),
+                        "Usuário excluído com sucesso!",
+                        null
+                )
+        );
+    }
 }

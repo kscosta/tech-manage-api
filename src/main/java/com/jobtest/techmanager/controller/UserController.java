@@ -11,10 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Interface do recurso de Usuários
@@ -51,4 +48,16 @@ public interface UserController {
     @ApiResponse(responseCode = "500", description = "Erro ao executar a solicitação!",
             content = @Content(schema = @Schema()))
     ResponseEntity<DefaultApiResponse<UserResponse>> updateUser(@RequestBody @Valid UserPutRequest userPutRequest);
+
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Exclui usuário",
+            description = "Exclui registro de usuário",
+            tags = {"Usuários"})
+    @ApiResponse(responseCode = "200", description = "Usuário excluído com sucesso!",
+            content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "404", description = "Usuário não encontrado!",
+            content = @Content(schema = @Schema()))
+    @ApiResponse(responseCode = "500", description = "Erro ao executar a solicitação!",
+            content = @Content(schema = @Schema()))
+    ResponseEntity<DefaultApiResponse<String>> deleteUser(@PathVariable Long id);
 }

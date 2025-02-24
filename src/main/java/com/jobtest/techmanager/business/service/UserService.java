@@ -20,6 +20,8 @@ public interface UserService {
 
     UserResponse updateUser(UserPutRequest userPutRequest);
 
-    UserResponse findUserById(Long id) throws NotBoundException, ChangeSetPersister.NotFoundException;
+    UserResponse findUserById(Long id);
+
+    void deleteUser(Long id);
 
 }
