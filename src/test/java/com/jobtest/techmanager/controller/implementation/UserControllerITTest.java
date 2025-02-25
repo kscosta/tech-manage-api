@@ -8,6 +8,7 @@ import com.jobtest.techmanager.controller.representation.request.UserPostRequest
 import com.jobtest.techmanager.controller.representation.request.UserPutRequest;
 import com.jobtest.techmanager.controller.representation.response.DefaultApiResponse;
 import com.jobtest.techmanager.controller.representation.response.UserResponse;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -48,7 +50,7 @@ public class UserControllerITTest {
                 "/users",
                 HttpMethod.POST,
                 request,
-                new ParameterizedTypeReference<DefaultApiResponse<UserResponse>>() {
+                new ParameterizedTypeReference<>() {
                 });
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
@@ -77,7 +79,7 @@ public class UserControllerITTest {
                 "/users",
                 HttpMethod.POST,
                 request,
-                new ParameterizedTypeReference<DefaultApiResponse<UserResponse>>() {
+                new ParameterizedTypeReference<>() {
                 });
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -97,7 +99,7 @@ public class UserControllerITTest {
                 "/users",
                 HttpMethod.PUT,
                 request,
-                new ParameterizedTypeReference<DefaultApiResponse<UserResponse>>() {
+                new ParameterizedTypeReference<>() {
                 });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -127,7 +129,7 @@ public class UserControllerITTest {
                 "/users",
                 HttpMethod.PUT,
                 request,
-                new ParameterizedTypeReference<DefaultApiResponse<UserResponse>>() {
+                new ParameterizedTypeReference<>() {
                 });
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -151,7 +153,7 @@ public class UserControllerITTest {
                 "/users",
                 HttpMethod.PUT,
                 request,
-                new ParameterizedTypeReference<DefaultApiResponse<UserResponse>>() {
+                new ParameterizedTypeReference<>() {
                 });
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
@@ -167,7 +169,7 @@ public class UserControllerITTest {
                 "/users/{id}",
                 HttpMethod.DELETE,
                 null,
-                new ParameterizedTypeReference<DefaultApiResponse<String>>() {
+                new ParameterizedTypeReference<>() {
                 },
                 2L);
 
@@ -184,12 +186,63 @@ public class UserControllerITTest {
                 "/users/{id}",
                 HttpMethod.DELETE,
                 null,
-                new ParameterizedTypeReference<DefaultApiResponse<String>>() {
+                new ParameterizedTypeReference<>() {
                 },
                 99999L);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(404, Objects.requireNonNull(response.getBody()).status());
         assertEquals("Usuário não encontrado!", response.getBody().message());
+    }
+
+    @Test
+    @DisplayName("Método findUserById deve retornar status OK quando realizado com sucesso")
+    void findUserByIdShouldReturnOKStatusWhenSuccessful() {
+
+        ResponseEntity<DefaultApiResponse<UserResponse>> response = testRestTemplate.exchange(
+                "/users/{id}",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                },
+                1L);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(200, Objects.requireNonNull(response.getBody()).status());
+        assertEquals("Usuário encontrado com sucesso!", response.getBody().message());
+    }
+
+    @Test
+    @DisplayName("Método findUserById deve retornar status Not Found quando usuario inexistente")
+    void findUserByIdShouldReturnNotFoundStatusWhenUserNotExist() {
+
+        ResponseEntity<DefaultApiResponse<UserResponse>> response = testRestTemplate.exchange(
+                "/users/{id}",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                },
+                99999L);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(404, Objects.requireNonNull(response.getBody()).status());
+        assertEquals("Usuário não encontrado!", response.getBody().message());
+    }
+
+    @Disabled
+    @Test
+    @DisplayName("Método Customize Toolbar… deve retornar status OK quando realizado com sucesso")
+    void findAllUsersShouldReturnOKStatusWhenSuccessful() {
+
+        ResponseEntity<DefaultApiResponse<Page<UserResponse>>> response = testRestTemplate.exchange(
+                "/users?page=0&size=10",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                });
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(200, Objects.requireNonNull(response.getBody()).status());
+        assertEquals("Solicitação executada com sucesso!", response.getBody().message());
     }
 }

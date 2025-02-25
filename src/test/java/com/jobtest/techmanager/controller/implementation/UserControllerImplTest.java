@@ -8,17 +8,22 @@ import com.jobtest.techmanager.business.service.UserService;
 import com.jobtest.techmanager.controller.representation.request.UserPostRequest;
 import com.jobtest.techmanager.controller.representation.request.UserPutRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -129,6 +134,32 @@ class UserControllerImplTest {
         doNothing().when(userServiceMock).deleteUser(any());
 
         mockMvc.perform(delete("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("Metodo findUserById deve retornar Status OK quando for executado com sucesso")
+    @Test
+    void findUserByIdShouldReturnStatusOKWhenSuccess() throws Exception {
+
+        when(userServiceMock.findUserById(any())).thenReturn(TestObjectUtil.userResponse());
+
+        mockMvc.perform(get("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Disabled
+    @DisplayName("Metodo findAllUsers deve retornar Status OK quando for executado com sucesso")
+    @Test
+    void findAllUsersShouldReturnStatusOKWhenSuccess() throws Exception {
+
+        PageRequest pageable = PageRequest.of(0, 10);
+        var pageList = new PageImpl<>(List.of(TestObjectUtil.userResponse()));
+
+        when(userServiceMock.findAllUsers(any())).thenReturn(pageList);
+
+        mockMvc.perform(get("/users")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
