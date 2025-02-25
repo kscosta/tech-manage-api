@@ -26,6 +26,9 @@ Antes de rodar o projeto, você precisa ter o seguinte instalado:
 * JDK 21+
 * Gradle (se não for utilizar a funcionalidade de build do IDE)
 * PostgreSQL 17
+
+Após instalação do PostgreSQL deve executar os scripts (createdb.sql) de criação do banco de dados, localizado na pasta: /src/main/database
+
 ## Variáveis de Ambiente
 
 Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de ambiente:
@@ -37,6 +40,8 @@ Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de
 `TM_DATABASE_PASSWORD` : Senha de acesso
 
 Obs.: Para usar o banco de dados em memória (H2) para teste, a configuração é automática e não requer modificações.
+
+
 ## Rodando o Projeto localmente
 
 ### 1. Clone o repositório
