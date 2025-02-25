@@ -2,7 +2,10 @@ package com.jobtest.techmanager.controller.representation.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jobtest.techmanager.business.enums.UserType;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
@@ -10,7 +13,6 @@ import java.time.LocalDate;
 /**
  * Record para representar o recurso User de requisição REST - PUT (DTO)
  *
- * @param id
  * @param fullName
  * @param email
  * @param phone
@@ -22,12 +24,12 @@ import java.time.LocalDate;
 
 @Validated
 public record UserPutRequest(
-        @NotNull(message = "id deve ser informado!") @Positive(message = "id deve ser número maior que 0") Long id,
+
         @NotBlank(message = "fullName deve ser informado!") String fullName,
         @NotBlank(message = "email deve ser informado!") @Email(message = "Email informado é inválido!") String email,
-        @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{4,5}[- .]?\\d{4}$",
+        @NotBlank(message = "phone deve ser informado!") @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{4,5}[- .]?\\d{4}$",
                 message = "Formato de telefone inválido! Exemplo: +99 99 99999-9999") String phone,
-        @JsonFormat(pattern = "dd-MM-yyyy") LocalDate birthDate,
+        @NotNull(message = "birthDate deve ser informado!") @JsonFormat(pattern = "dd-MM-yyyy") LocalDate birthDate,
         @NotNull(message = "userType deve ser informado!") UserType userType
 ) {
 }

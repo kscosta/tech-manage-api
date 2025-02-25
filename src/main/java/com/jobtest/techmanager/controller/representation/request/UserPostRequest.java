@@ -26,9 +26,9 @@ import java.time.LocalDate;
 public record UserPostRequest(
         @NotBlank(message = "fullName deve ser informado!") String fullName,
         @NotBlank(message = "email deve ser informado!") @Email(message = "Email informado é inválido!") String email,
-        @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{4,5}[- .]?\\d{4}$",
+        @NotBlank(message = "phone deve ser informado!") @Pattern(regexp = "^(\\+\\d{1,3}( )?)?((\\(\\d{1,3}\\))|\\d{1,3})[- .]?\\d{4,5}[- .]?\\d{4}$",
                 message = "Formato de telefone inválido! Exemplo: +99 99 99999-9999") String phone,
-        @JsonFormat(pattern = "dd-MM-yyyy") LocalDate birthDate,
+        @NotNull(message = "birthDate deve ser informado!") @JsonFormat(pattern = "dd-MM-yyyy") LocalDate birthDate,
         @NotNull(message = "userType deve ser informado!") UserType userType
 ) {
 }

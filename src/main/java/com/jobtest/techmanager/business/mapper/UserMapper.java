@@ -32,6 +32,7 @@ public interface UserMapper {
     UserEntity userPostRequestToUserEntity(UserPostRequest userPostRequest);
 
     @Mapping(target = "birthDate", source = "birthDate", dateFormat = "yyyy-MM-dd")
+    @Mapping(target = "id", ignore = true)
     UserEntity userPutRequestToUserEntity(UserPutRequest userPutRequest);
 
     @Mapping(target = "birthDate", source = "birthDate", dateFormat = "yyyy-MM-dd")

@@ -96,11 +96,12 @@ public class UserControllerITTest {
         HttpEntity<UserPutRequest> request = new HttpEntity<>(TestObjectUtil.userPutRequest(), headers);
 
         ResponseEntity<DefaultApiResponse<UserResponse>> response = testRestTemplate.exchange(
-                "/users",
+                "/users/{id}",
                 HttpMethod.PUT,
                 request,
                 new ParameterizedTypeReference<>() {
-                });
+                },
+                1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -117,7 +118,7 @@ public class UserControllerITTest {
     @DisplayName("Método updateUser deve retornar status BadRequest quando parâmetro informado for inválido")
     void updateUserShouldReturnBadRequestStatusWhenInvalidParameters() {
 
-        UserPutRequest invalidRequest = new UserPutRequest(1L, "Fulano da Silva", "invalid",
+        UserPutRequest invalidRequest = new UserPutRequest("Fulano da Silva", "invalid",
                 "+55 11 99999-5544",
                 LocalDate.of(1995, 10, 25), UserType.ADMIN);
 
@@ -126,11 +127,12 @@ public class UserControllerITTest {
         HttpEntity<UserPutRequest> request = new HttpEntity<>(invalidRequest, headers);
 
         ResponseEntity<DefaultApiResponse<UserResponse>> response = testRestTemplate.exchange(
-                "/users",
+                "/users/{id}",
                 HttpMethod.PUT,
                 request,
                 new ParameterizedTypeReference<>() {
-                });
+                },
+                1L);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals(400, Objects.requireNonNull(response.getBody()).status());
@@ -141,7 +143,7 @@ public class UserControllerITTest {
     @DisplayName("Método updateUser deve retornar status Not Found quando usuario inexistente")
     void updateUserShouldReturnNotFoundStatusWhenUserNotExist() {
 
-        UserPutRequest requestNotFound = new UserPutRequest(9999L, "Fulano da Silva", "fulano@test.com.br",
+        UserPutRequest requestNotFound = new UserPutRequest("Fulano da Silva", "fulano@test.com.br",
                 "+55 11 99988-5544",
                 LocalDate.of(1995, 10, 25), UserType.ADMIN);
 
@@ -150,11 +152,12 @@ public class UserControllerITTest {
         HttpEntity<UserPutRequest> request = new HttpEntity<>(requestNotFound, headers);
 
         ResponseEntity<DefaultApiResponse<UserResponse>> response = testRestTemplate.exchange(
-                "/users",
+                "/users/{id}",
                 HttpMethod.PUT,
                 request,
                 new ParameterizedTypeReference<>() {
-                });
+                },
+                9999L);
 
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertEquals(404, Objects.requireNonNull(response.getBody()).status());

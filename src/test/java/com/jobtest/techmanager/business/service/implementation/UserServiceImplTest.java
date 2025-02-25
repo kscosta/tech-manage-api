@@ -66,7 +66,7 @@ class UserServiceImplTest {
         when(userMapperMock.userPutRequestToUserEntity(any())).thenReturn(TestObjectUtil.userEntityUpdated());
         when(userMapperMock.userEntityToUserResponse(any())).thenReturn(TestObjectUtil.userResponseUpdated());
 
-        UserResponse response = userServiceMock.updateUser(TestObjectUtil.userPutRequest());
+        UserResponse response = userServiceMock.updateUser(longTestValue, TestObjectUtil.userPutRequest());
 
         Assertions.assertEquals(response, TestObjectUtil.userResponseUpdated());
 

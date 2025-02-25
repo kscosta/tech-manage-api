@@ -38,7 +38,7 @@ public interface UserController {
             content = @Content(schema = @Schema()))
     ResponseEntity<DefaultApiResponse<UserResponse>> createUser(@RequestBody @Valid UserPostRequest userPostRequest);
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Atualiza usuário",
             description = "Atualiza registro de usuário",
             tags = {"Usuários"})
@@ -50,7 +50,8 @@ public interface UserController {
             content = @Content(schema = @Schema()))
     @ApiResponse(responseCode = "500", description = "Erro ao executar a solicitação!",
             content = @Content(schema = @Schema()))
-    ResponseEntity<DefaultApiResponse<UserResponse>> updateUser(@RequestBody @Valid UserPutRequest userPutRequest);
+    ResponseEntity<DefaultApiResponse<UserResponse>> updateUser(@PathVariable Long id,
+                                                                @RequestBody @Valid UserPutRequest userPutRequest);
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Exclui usuário",
