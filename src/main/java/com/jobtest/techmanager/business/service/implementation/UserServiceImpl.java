@@ -39,10 +39,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUser(UserPutRequest userPutRequest) {
+    public UserResponse updateUser(Long id, UserPutRequest userPutRequest) {
 
-        findUserById(userPutRequest.id());
+        findUserById(id);
         UserEntity updateUser = userMapper.userPutRequestToUserEntity(userPutRequest);
+        updateUser.setId(id);
         return userMapper.userEntityToUserResponse(userRepository.saveAndFlush(updateUser));
     }
 

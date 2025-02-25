@@ -43,13 +43,13 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<DefaultApiResponse<UserResponse>> updateUser(UserPutRequest userPutRequest) {
+    public ResponseEntity<DefaultApiResponse<UserResponse>> updateUser(Long id, UserPutRequest userPutRequest) {
 
         return ResponseEntity.status(HttpStatus.OK).body(new DefaultApiResponse<>(
                         LocalDateTime.now(),
                         HttpStatus.OK.value(),
                         "Usuário atualizado com sucesso!",
-                        userService.updateUser(userPutRequest)
+                        userService.updateUser(id, userPutRequest)
                 )
         );
     }

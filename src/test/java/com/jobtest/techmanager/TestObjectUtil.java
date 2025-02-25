@@ -45,7 +45,7 @@ public class TestObjectUtil {
 
     public static UserPutRequest userPutRequest() {
 
-        return new UserPutRequest(1L ,"Fulano da Silva", "fulano@test.com.br",
+        return new UserPutRequest("Fulano da Silva", "fulano@test.com.br",
                 "+55 11 99988-5544",
                 LocalDate.of(1995, 10, 25), UserType.ADMIN);
     }

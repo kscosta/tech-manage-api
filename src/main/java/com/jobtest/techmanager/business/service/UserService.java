@@ -20,7 +20,7 @@ public interface UserService {
 
     UserResponse createUser(UserPostRequest userPostRequest);
 
-    UserResponse updateUser(UserPutRequest userPutRequest);
+    UserResponse updateUser(Long id, UserPutRequest userPutRequest);
 
     UserResponse findUserById(Long id);
 

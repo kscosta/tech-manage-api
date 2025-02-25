@@ -15,7 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
@@ -93,8 +92,8 @@ class UserControllerImplTest {
     @Test
     void updateUserShouldReturnUserResponseWhenSuccess() throws Exception {
 
-        when(userServiceMock.updateUser(any())).thenReturn(TestObjectUtil.userResponseUpdated());
-        mockMvc.perform(put("/users")
+        when(userServiceMock.updateUser(anyLong(), any())).thenReturn(TestObjectUtil.userResponseUpdated());
+        mockMvc.perform(put("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(TestObjectUtil.userPutRequest())))
                 .andExpect(status().isOk())
@@ -108,23 +107,23 @@ class UserControllerImplTest {
                 .andExpect(jsonPath("$.data.userType").value(TestObjectUtil.userResponseUpdated().userType().getValue()))
         ;
 
-        verify(userServiceMock, times(1)).updateUser(TestObjectUtil.userPutRequest());
+        verify(userServiceMock, times(1)).updateUser(1L, TestObjectUtil.userPutRequest());
     }
 
     @DisplayName("Metodo updateUser deve retornar BadRequest quando parametros inválidos")
     @Test
     void updateUserShouldReturnBadRequestWhenInvalidParameters() throws Exception {
 
-        UserPutRequest invalidUserPutRequestMock = new UserPutRequest(1L, "Fulano da Silva", "invalid",
+        UserPutRequest invalidUserPutRequestMock = new UserPutRequest("Fulano da Silva", "invalid",
                 "+55 11 99999-5544",
                 LocalDate.of(1995, 10, 25), UserType.ADMIN);
 
-        mockMvc.perform(post("/users")
+        mockMvc.perform(put("/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(invalidUserPutRequestMock)))
                 .andExpect(status().isBadRequest());
 
-        verify(userServiceMock, times(0)).updateUser(TestObjectUtil.userPutRequest());
+        verify(userServiceMock, times(0)).updateUser(1L, TestObjectUtil.userPutRequest());
     }
 
     @DisplayName("Metodo deleteUser deve retornar Status OK quando for executado com sucesso")
@@ -133,7 +132,7 @@ class UserControllerImplTest {
 
         doNothing().when(userServiceMock).deleteUser(any());
 
-        mockMvc.perform(delete("/users/1")
+        mockMvc.perform(delete("/users/2")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
