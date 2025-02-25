@@ -8,6 +8,8 @@ import com.jobtest.techmanager.controller.representation.response.UserResponse;
 import com.jobtest.techmanager.infrastructure.entity.UserEntity;
 import com.jobtest.techmanager.infrastructure.exception.NotFoundApiException;
 import com.jobtest.techmanager.infrastructure.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -57,5 +59,12 @@ public class UserServiceImpl implements UserService {
 
         findUserById(id);
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<UserResponse> findAllUsers(Pageable pageable) {
+
+        return userRepository.findAll(pageable).map(
+                userMapper::userEntityToUserResponse);
     }
 }

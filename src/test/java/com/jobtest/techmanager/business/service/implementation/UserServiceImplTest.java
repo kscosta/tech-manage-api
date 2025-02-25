@@ -11,7 +11,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +34,7 @@ class UserServiceImplTest {
     @Mock
     private UserMapper userMapperMock;
 
+    private final Long longTestValue = 1L;
 
     @Test
     @DisplayName("Método createUser deve retornar novo usuário quando executado com sucesso")
@@ -68,7 +73,7 @@ class UserServiceImplTest {
         verify(userMapperMock, times(1))
                 .userPutRequestToUserEntity(TestObjectUtil.userPutRequest());
 
-        verify(userRepositoryMock, times(1)).findById(1L);
+        verify(userRepositoryMock, times(1)).findById(longTestValue);
 
         verify(userRepositoryMock, times(1)).saveAndFlush(TestObjectUtil.userEntityUpdated());
 
@@ -81,10 +86,40 @@ class UserServiceImplTest {
         doNothing().when(userRepositoryMock).deleteById(any());
         when(userRepositoryMock.findById(any())).thenReturn(Optional.of(TestObjectUtil.userEntity()));
 
-        Assertions.assertDoesNotThrow(() -> userServiceMock.deleteUser(1L));
+        Assertions.assertDoesNotThrow(() -> userServiceMock.deleteUser(longTestValue));
 
-        verify(userRepositoryMock, times(1)).findById(1L);
+        verify(userRepositoryMock, times(1)).findById(longTestValue);
+    }
 
+    @Test
+    @DisplayName("Método findUserById deve retornar UserResponse quando executado com sucesso")
+    void findUserByIdShouldUserResponseWhenSuccess() {
+
+        when(userRepositoryMock.findById(any())).thenReturn(Optional.of(TestObjectUtil.userEntity()));
+        when(userMapperMock.userEntityToUserResponse(any())).thenReturn(TestObjectUtil.userResponse());
+
+        UserResponse response = userServiceMock.findUserById(longTestValue);
+
+        Assertions.assertEquals(response, TestObjectUtil.userResponse());
+
+        verify(userRepositoryMock, times(1)).findById(longTestValue);
+    }
+
+    @Test
+    @DisplayName("Método findAllUsers deve retornar Page de UserResponse quando executado com sucesso")
+    void findAllUsersShouldPageUserResponseWhenSuccess() {
+
+        when(userRepositoryMock.findAll(any(Pageable.class))).thenReturn(
+                new PageImpl<>(List.of(TestObjectUtil.userEntity())));
+
+        when(userMapperMock.userEntityToUserResponse(any())).thenReturn(TestObjectUtil.userResponse());
+
+        Page<UserResponse> response = userServiceMock.findAllUsers(Pageable.ofSize(1));
+
+        Assertions.assertNotNull(response);
+        Assertions.assertFalse(response.isEmpty());
+
+        verify(userRepositoryMock, times(1)).findAll(Pageable.ofSize(1));
     }
 
 
